@@ -1,0 +1,53 @@
+function [ updatedParams,expectedCounts ] = EM( D,params )
+updatedParams=params;
+K=params.K;
+numOfClass=size(params.pie,2);
+numOfAttr=size(D,2);
+numOfValue=max(K);
+dataSize=size(D,1);
+NC=zeros(1,numOfClass);%expected counts of different classes
+NCX=zeros(numOfAttr,numOfClass,numOfValue);
+for l=1:dataSize
+    pClass=zeros(1,numOfClass);
+    for j=1:numOfClass
+        multi=1;
+        for i=1:numOfAttr
+            k=D(l,i);
+            if k~=0
+                multi=multi*params.sigma(i,j,k);
+            end
+        end
+        pClass(1,j)=params.pie(1,j)*multi;
+    end
+    pClass=pClass/sum(pClass);
+    NC=NC+pClass;
+    for j=1:numOfClass
+        for i=1:numOfAttr
+            for k=1:K(i)
+                if D(l,i)==0
+                    NCX(i,j,k)=NCX(i,j,k)+pClass(1,j)*params.sigma(i,j,k);
+                else if D(l,i)==k
+                        NCX(i,j,k)=NCX(i,j,k)+pClass(1,j);
+                    end
+                end
+            end
+        end    
+    end
+end
+expectedCounts.NC=NC;
+expectedCounts.NCX=NCX;
+updatedParams.pie=NC/sum(NC);
+for j=1:numOfClass
+    for i=1:numOfAttr
+        ecount=0;
+        for k=1:K(i)
+            ecount=ecount+NCX(i,j,k);
+        end
+        for k=1:K(i)
+            params.sigma(i,j,k)=NCX(i,j,k)/ecount;
+        end
+    end
+end
+updatedParams.sigma=params.sigma;
+end
+

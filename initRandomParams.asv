@@ -1,0 +1,8 @@
+function [ params ] = initRandomParams(i,k,j,K)
+params.sigma=zeros(i,j,k);
+for x=1:i
+    for y=1:j
+        params(x,y,:)=randProbSeq(K)
+params.pie=randProbSeq(j);
+end
+

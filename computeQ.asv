@@ -1,0 +1,11 @@
+function [ q ] = computeQ( params,expectedCounts )
+q=0;
+for j=1:params.j
+    q=q+expectCounts.NC(1,j)*log(params.pies(1,j));
+end
+for i=1:params.i
+    for k=1:params.K(i)
+        for j=1:params.j
+            q=q+expectedCounts.NCX()
+end
+
